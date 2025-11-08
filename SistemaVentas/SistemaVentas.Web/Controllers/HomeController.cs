@@ -1,32 +1,29 @@
 using Microsoft.AspNetCore.Mvc;
-using SistemaVentas.Web.Models;
-using System.Diagnostics;
+using Newtonsoft.Json;
+using SistemaVentas.Web.Models.ViewModels;
 
 namespace SistemaVentas.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
         public IActionResult Index()
         {
-            return View();
-        }
+            // Verificar sesión
+            var usuarioJson = HttpContext.Session.GetString("Usuario");
+            if (string.IsNullOrEmpty(usuarioJson))
+            {
+                return RedirectToAction("Login", "Auth");
+            }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+            var usuario = JsonConvert.DeserializeObject<UsuarioSesion>(usuarioJson);
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            // Verificar rol de administrador
+            if (usuario.Rol != "Administrador")
+            {
+                return RedirectToAction("Create", "Ventas");
+            }
+
+            return View();
         }
     }
 }
