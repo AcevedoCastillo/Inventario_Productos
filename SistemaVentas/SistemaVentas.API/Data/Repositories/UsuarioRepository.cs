@@ -24,7 +24,6 @@ namespace SistemaVentas.API.Data.Repositories
                 var paramNombreUsuario = new SqlParameter("@NombreUsuario", nombreUsuario);
                 var paramContrasena = new SqlParameter("@Contrasena", contrasena);
 
-                // ✅ Usar consulta SQL directa con ADO.NET
                 using var command = _context.Database.GetDbConnection().CreateCommand();
                 command.CommandText = "SP_ValidarUsuario";
                 command.CommandType = CommandType.StoredProcedure;

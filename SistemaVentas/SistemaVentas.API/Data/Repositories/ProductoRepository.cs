@@ -36,11 +36,11 @@ namespace SistemaVentas.API.Data.Repositories
             try
             {
                 var paramId = new SqlParameter("@IdPro", id);
-
-                var producto = await _context.Productos
+                var producto = _context.Productos
                     .FromSqlRaw("EXEC SP_ObtenerProductoPorId @IdPro", paramId)
                     .AsNoTracking()
-                    .FirstOrDefaultAsync();
+                    .AsEnumerable()
+                    .FirstOrDefault();
 
                 return producto;
             }
@@ -79,13 +79,13 @@ namespace SistemaVentas.API.Data.Repositories
                 var paramStock = new SqlParameter("@Stock", producto.Stock);
 
                 var result = await _context.Database
-                    .SqlQueryRaw<int>("EXEC SP_CrearProducto @Codigo, @Producto, @Precio, @Stock",
+                    .SqlQueryRaw<decimal>("EXEC SP_CrearProducto @Codigo, @Producto, @Precio, @Stock",
                         paramCodigo, paramProducto, paramPrecio, paramStock)
                     .ToListAsync();
 
                 if (result.Any())
                 {
-                    producto.IdPro = result.First();
+                    producto.IdPro = Convert.ToInt32(result.First());
                     return producto;
                 }
 
@@ -112,11 +112,18 @@ namespace SistemaVentas.API.Data.Repositories
                 var paramStock = new SqlParameter("@Stock", producto.Stock);
 
                 var result = await _context.Database
-                    .ExecuteSqlRawAsync(
+                    .SqlQueryRaw<int>(
                         "EXEC SP_ActualizarProducto @IdPro, @Codigo, @Producto, @Precio, @Stock",
-                        paramIdPro, paramCodigo, paramProducto, paramPrecio, paramStock);
+                        paramIdPro, paramCodigo, paramProducto, paramPrecio, paramStock)
+                    .ToListAsync();
 
-                return result > 0;
+                if (result.Any() && result.First() > 0)
+                {
+                    return true;
+                }
+
+                return false;
+
             }
             catch (SqlException ex) when (ex.Message.Contains("ya existe"))
             {
@@ -133,11 +140,19 @@ namespace SistemaVentas.API.Data.Repositories
             try
             {
                 var paramId = new SqlParameter("@IdPro", id);
-
                 var result = await _context.Database
-                    .ExecuteSqlRawAsync("EXEC SP_EliminarProducto @IdPro", paramId);
+                            .SqlQueryRaw<int>(
+                                "EXEC SP_EliminarProducto @IdPro",
+                                paramId)
+                            .ToListAsync();
 
-                return result > 0;
+                if (result.Any() && result.First() > 0)
+                {
+                    return true;
+                }
+
+                return false;
+
             }
             catch (SqlException ex) when (ex.Message.Contains("ventas asociadas"))
             {
