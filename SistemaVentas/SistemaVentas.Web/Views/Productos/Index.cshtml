@@ -1,0 +1,85 @@
+﻿@model List<SistemaVentas.Web.Models.ViewModels.ProductoViewModel>
+@{
+    ViewData["Title"] = "Productos";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h2 class="page-title">
+            <i class="fas fa-box text-danger"></i> Gestión de Productos
+        </h2>
+        <hr />
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12">
+        <a asp-action="Create" class="btn btn-danger">
+            <i class="fas fa-plus"></i> Agregar Producto
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="tablaProductos">
+                        <thead class="table-danger">
+                            <tr>
+                                <th>Código</th>
+                                <th>Producto</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Fecha Creación</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                @foreach (var producto in Model)
+                                {
+                                    <tr>
+                                        <td><strong>@producto.Codigo</strong></td>
+                                        <td>@producto.Producto</td>
+                                        <td>@producto.Precio.ToString("C2")</td>
+                                        <td>
+                                            <span class="badge @(producto.Stock > 10 ? "bg-success" : producto.Stock > 0 ? "bg-warning" : "bg-danger")">
+                                                @producto.Stock
+                                            </span>
+                                        </td>
+                                        <td>@producto.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                                        <td class="text-center">
+                                            <a asp-action="Edit" asp-route-id="@producto.IdPro" class="btn btn-sm btn-warning" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@producto.IdPro" class="btn btn-sm btn-danger" title="Eliminar">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center">No hay productos registrados</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Puedes agregar DataTables aquí si quieres
+        });
+    </script>
+}

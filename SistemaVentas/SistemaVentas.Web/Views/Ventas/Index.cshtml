@@ -1,0 +1,126 @@
+﻿@model List<SistemaVentas.Web.Models.ViewModels.VentaViewModel>
+@{
+    ViewData["Title"] = "Ventas";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h2 class="page-title">
+            <i class="fas fa-shopping-cart text-danger"></i> Registro de Ventas
+        </h2>
+        <hr />
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12">
+        <a asp-action="Create" class="btn btn-danger">
+            <i class="fas fa-plus"></i> Nueva Venta
+        </a>
+    </div>
+</div>
+
+<!-- Filtros -->
+<div class="row mb-3">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-body">
+                <form id="formFiltros" class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Fecha Inicio:</label>
+                        <input type="date" id="fechaInicio" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Fecha Fin:</label>
+                        <input type="date" id="fechaFin" class="form-control" />
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="button" id="btnFiltrar" class="btn btn-danger me-2">
+                            <i class="fas fa-filter"></i> Filtrar
+                        </button>
+                        <button type="button" id="btnLimpiar" class="btn btn-secondary">
+                            <i class="fas fa-eraser"></i> Limpiar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="tablaVentas">
+                        <thead class="table-danger">
+                            <tr>
+                                <th>N° Venta</th>
+                                <th>Fecha</th>
+                                <th>Vendedor</th>
+                                <th class="text-end">Subtotal</th>
+                                <th class="text-end">IVA</th>
+                                <th class="text-end">Total</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                @foreach (var venta in Model)
+                                {
+                                    <tr>
+                                        <td><strong>@venta.IdVenta</strong></td>
+                                        <td>@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td>@venta.Vendedor</td>
+                                        <td class="text-end">@venta.SubTotal.ToString("C2")</td>
+                                        <td class="text-end">@venta.TotalIVA.ToString("C2")</td>
+                                        <td class="text-end"><strong>@venta.Total.ToString("C2")</strong></td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-sm btn-info" onclick="verDetalle(@venta.IdVenta)">
+                                                <i class="fas fa-eye"></i> Ver
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center">No hay ventas registradas</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Detalle de Venta -->
+<div class="modal fade" id="modalDetalle" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-file-invoice"></i> Detalle de Venta
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="detalleVentaContent">
+                <!-- Se llenará con JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function verDetalle(idVenta) {
+            // Implementar con AJAX para obtener el detalle
+            alert('Ver detalle de venta: ' + idVenta);
+        }
+    </script>
+}

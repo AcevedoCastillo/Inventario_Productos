@@ -1,8 +1,67 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row">
+    <div class="col-12">
+        <h2 class="page-title">
+            <i class="fas fa-home text-danger"></i> Panel de Administración
+        </h2>
+        <hr />
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4 mb-4">
+        <div class="card dashboard-card border-danger">
+            <div class="card-body text-center">
+                <i class="fas fa-box fa-3x text-danger mb-3"></i>
+                <h5 class="card-title">Productos</h5>
+                <p class="card-text">Gestionar inventario de productos</p>
+                <a asp-controller="Productos" asp-action="Index" class="btn btn-danger">
+                    <i class="fas fa-arrow-right"></i> Ir a Productos
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card dashboard-card border-danger">
+            <div class="card-body text-center">
+                <i class="fas fa-shopping-cart fa-3x text-danger mb-3"></i>
+                <h5 class="card-title">Ventas</h5>
+                <p class="card-text">Registrar y consultar ventas</p>
+                <a asp-controller="Ventas" asp-action="Index" class="btn btn-danger">
+                    <i class="fas fa-arrow-right"></i> Ir a Ventas
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card dashboard-card border-danger">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-bar fa-3x text-danger mb-3"></i>
+                <h5 class="card-title">Reportes</h5>
+                <p class="card-text">Generar reportes de ventas</p>
+                <a asp-controller="Ventas" asp-action="Reportes" class="btn btn-danger">
+                    <i class="fas fa-arrow-right"></i> Ir a Reportes
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="alert alert-info">
+            <h5><i class="fas fa-info-circle"></i> Información del Sistema</h5>
+            <ul class="mb-0">
+                <li>Sistema de gestión de inventario y ventas</li>
+                <li>Control de stock en tiempo real</li>
+                <li>Generación de reportes en PDF y Excel</li>
+                <li>Cálculo automático de IVA (13%)</li>
+            </ul>
+        </div>
+    </div>
 </div>
