@@ -167,7 +167,7 @@ namespace SistemaVentas.API.Services
                 TotalIVA = venta.TotalIVA,
                 Total = venta.Total,
                 IdUsuario = venta.IdUsuario,
-                NombreUsuario = venta.Usuario?.NombreCompleto,
+                NombreUsuario = venta.NombreUsuario,
                 Detalles = venta.DetalleVentas?.Select(d => new DetalleVentaDTO
                 {
                     IdDe = d.IdDe,

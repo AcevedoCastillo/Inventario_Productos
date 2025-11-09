@@ -56,10 +56,11 @@ namespace SistemaVentas.API.Data.Repositories
             {
                 var paramCodigo = new SqlParameter("@Codigo", codigo);
 
-                var producto = await _context.Productos
+                var producto = _context.Productos
                     .FromSqlRaw("EXEC SP_BuscarProductoPorCodigo @Codigo", paramCodigo)
                     .AsNoTracking()
-                    .FirstOrDefaultAsync();
+                    .AsEnumerable()
+                    .FirstOrDefault();
 
                 return producto;
             }
@@ -191,14 +192,13 @@ namespace SistemaVentas.API.Data.Repositories
                 var paramIdPro = new SqlParameter("@IdPro", idPro);
                 var paramCantidad = new SqlParameter("@Cantidad", cantidad);
 
-                // Crear clase para resultado del SP
-                var result = await _context.Database
-                    .SqlQueryRaw<StockVerificacionResult>(
-                        "EXEC SP_VerificarStock @IdPro, @Cantidad",
-                        paramIdPro, paramCantidad)
-                    .FirstOrDefaultAsync();
+                var result = _context.StockVerificacionResults
+                    .FromSqlRaw("EXEC SP_VerificarStock @IdPro, @Cantidad", paramIdPro, paramCantidad)
+                    .AsEnumerable()
+                    .FirstOrDefault();
 
                 return result?.Disponible == 1;
+
             }
             catch (Exception ex)
             {

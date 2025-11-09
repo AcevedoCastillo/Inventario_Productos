@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SistemaVentas.API.Data.Repositories;
 using SistemaVentas.Core.Entities;
 
 namespace SistemaVentas.API.Data
@@ -14,7 +15,7 @@ namespace SistemaVentas.API.Data
         public DbSet<Producto> Productos { get; set; }
         public DbSet<Venta> Ventas { get; set; }
         public DbSet<DetalleVenta> DetalleVentas { get; set; }
-
+        public DbSet<StockVerificacionResult> StockVerificacionResults { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -82,6 +83,7 @@ namespace SistemaVentas.API.Data
                     .HasForeignKey(e => e.IdPro)
                     .OnDelete(DeleteBehavior.Restrict);
             });
+            modelBuilder.Entity<StockVerificacionResult>().HasNoKey();
         }
     }
 }

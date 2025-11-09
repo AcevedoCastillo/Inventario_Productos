@@ -21,7 +21,6 @@ namespace SistemaVentas.API.Data.Repositories
         {
             try
             {
-                // Convertir detalles a JSON
                 var detallesJson = JsonSerializer.Serialize(detalles.Select(d => new
                 {
                     IdPro = d.IdPro,
@@ -41,12 +40,13 @@ namespace SistemaVentas.API.Data.Repositories
                     Value = detallesJson
                 };
 
-                // Ejecutar SP y obtener el IdVenta generado
-                var result = await _context.Database
+                var resultList = await _context.Database
                     .SqlQueryRaw<VentaCreacionResult>(
                         "EXEC SP_CrearVenta @Vendedor, @SubTotal, @TotalIVA, @Total, @IdUsuario, @DetallesVenta",
                         paramVendedor, paramSubTotal, paramTotalIVA, paramTotal, paramIdUsuario, paramDetalles)
-                    .FirstOrDefaultAsync();
+                    .ToListAsync(); 
+
+                var result = resultList.FirstOrDefault();
 
                 return result?.IdVenta ?? 0;
             }
@@ -58,30 +58,63 @@ namespace SistemaVentas.API.Data.Repositories
 
         public async Task<IEnumerable<Venta>> ObtenerVentasAsync(DateTime? fechaInicio, DateTime? fechaFin)
         {
+            var ventas = new List<Venta>();
+
             try
             {
-                var paramFechaInicio = fechaInicio.HasValue
-                    ? new SqlParameter("@FechaInicio", fechaInicio.Value)
-                    : new SqlParameter("@FechaInicio", DBNull.Value);
+                using var connection = _context.Database.GetDbConnection();
+                await connection.OpenAsync();
 
-                var paramFechaFin = fechaFin.HasValue
-                    ? new SqlParameter("@FechaFin", fechaFin.Value)
-                    : new SqlParameter("@FechaFin", DBNull.Value);
+                using var command = connection.CreateCommand();
+                command.CommandText = "SP_ListarVentas";
+                command.CommandType = System.Data.CommandType.StoredProcedure;
 
-                var ventas = await _context.Ventas
-                    .FromSqlRaw("EXEC SP_ListarVentas @FechaInicio, @FechaFin",
-                        paramFechaInicio, paramFechaFin)
-                    .Include(v => v.Usuario)
-                    .AsNoTracking()
-                    .ToListAsync();
+                var paramFechaInicio = command.CreateParameter();
+                paramFechaInicio.ParameterName = "@FechaInicio";
+                paramFechaInicio.Value = fechaInicio ?? (object)DBNull.Value;
+                command.Parameters.Add(paramFechaInicio);
 
-                return ventas;
+                var paramFechaFin = command.CreateParameter();
+                paramFechaFin.ParameterName = "@FechaFin";
+                paramFechaFin.Value = fechaFin ?? (object)DBNull.Value;
+                command.Parameters.Add(paramFechaFin);
+
+                using var reader = await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    var venta = new Venta
+                    {
+                        IdVenta = reader.GetInt32(reader.GetOrdinal("IdVenta")),
+                        Vendedor = reader.GetString(reader.GetOrdinal("Vendedor")),
+                        SubTotal = reader.GetDecimal(reader.GetOrdinal("SubTotal")),
+                        TotalIVA = reader.GetDecimal(reader.GetOrdinal("TotalIVA")),
+                        Total = reader.GetDecimal(reader.GetOrdinal("Total")),
+                        IdUsuario = 0
+                    };
+
+                    // Si el SP devuelve nombre de usuario o algo más
+                    if (reader.HasColumn("NombreUsuario"))
+                    {
+                        venta.NombreUsuario = reader.GetString(reader.GetOrdinal("NombreUsuario"));
+                        venta.Usuario = new Usuario
+                        {
+                            IdUsuario = venta.IdUsuario,
+                            NombreUsuario = reader.GetString(reader.GetOrdinal("NombreUsuario"))
+                        };
+                    }
+
+                    ventas.Add(venta);
+                }
             }
             catch (Exception ex)
             {
                 throw new Exception($"Error al obtener ventas: {ex.Message}", ex);
             }
+
+            return ventas;
         }
+
 
         public async Task<Venta> ObtenerVentaPorIdAsync(int id)
         {
@@ -154,4 +187,17 @@ namespace SistemaVentas.API.Data.Repositories
     {
         public int IdVenta { get; set; }
     }
+    public static class DataReaderExtensions
+    {
+        public static bool HasColumn(this IDataRecord reader, string columnName)
+        {
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                if (reader.GetName(i).Equals(columnName, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+            return false;
+        }
+    }
+
 }
