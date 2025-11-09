@@ -28,8 +28,9 @@ namespace SistemaVentas.Core.Entities
         [Column(TypeName = "decimal(10,2)")]
         public decimal Total { get; set; }
 
-        [Required]
         public int IdUsuario { get; set; }
+        public string NombreUsuario { get; set; }
+
 
         // Navegación
         [ForeignKey("IdUsuario")]

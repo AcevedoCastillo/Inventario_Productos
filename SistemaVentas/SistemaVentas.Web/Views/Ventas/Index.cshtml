@@ -62,7 +62,6 @@
                                 <th class="text-end">Subtotal</th>
                                 <th class="text-end">IVA</th>
                                 <th class="text-end">Total</th>
-                                <th class="text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -73,15 +72,10 @@
                                     <tr>
                                         <td><strong>@venta.IdVenta</strong></td>
                                         <td>@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
-                                        <td>@venta.Vendedor</td>
+                                        <td>@venta.NombreUsuario</td>
                                         <td class="text-end">@venta.SubTotal.ToString("C2")</td>
                                         <td class="text-end">@venta.TotalIVA.ToString("C2")</td>
                                         <td class="text-end"><strong>@venta.Total.ToString("C2")</strong></td>
-                                        <td class="text-center">
-                                            <button type="button" class="btn btn-sm btn-info" onclick="verDetalle(@venta.IdVenta)">
-                                                <i class="fas fa-eye"></i> Ver
-                                            </button>
-                                        </td>
                                     </tr>
                                 }
                             }
@@ -98,29 +92,3 @@
         </div>
     </div>
 </div>
-
-<!-- Modal Detalle de Venta -->
-<div class="modal fade" id="modalDetalle" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">
-                    <i class="fas fa-file-invoice"></i> Detalle de Venta
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body" id="detalleVentaContent">
-                <!-- Se llenará con JavaScript -->
-            </div>
-        </div>
-    </div>
-</div>
-
-@section Scripts {
-    <script>
-        function verDetalle(idVenta) {
-            // Implementar con AJAX para obtener el detalle
-            alert('Ver detalle de venta: ' + idVenta);
-        }
-    </script>
-}

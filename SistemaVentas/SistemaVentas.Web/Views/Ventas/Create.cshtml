@@ -1,4 +1,5 @@
 ﻿@model SistemaVentas.Web.Models.ViewModels.CrearVentaViewModel
+@inject IConfiguration Configuration
 @{
     ViewData["Title"] = "Registrar Venta";
     var usuario = JsonConvert.DeserializeObject<SistemaVentas.Web.Models.ViewModels.UsuarioSesion>(
@@ -21,12 +22,6 @@
     <div class="col-12">
         <div class="card border-0">
             <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
-                <div>
-                    <strong>Inicio</strong>
-                    <strong class="ms-3">Productos</strong>
-                    <strong class="ms-3">Ventas</strong>
-                    <strong class="ms-3">Reportes</strong>
-                </div>
                 <div>
                     <span class="me-2">@usuario.NombreUsuario</span>
                     <span class="badge bg-light text-danger">@usuario.IdUsuario</span>
@@ -141,7 +136,7 @@
                 <h5 class="modal-title">
                     <i class="fas fa-check-circle"></i> Venta Registrada
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" onclick="location.reload()"></button>
             </div>
             <div class="modal-body text-center">
                 <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
@@ -158,5 +153,10 @@
 </div>
 
 @section Scripts {
+    <script>
+        const API_BASE = '@Configuration["ApiSettings:BaseUrl"]';
+    </script>
     <script src="~/js/ventas.js"></script>
+
+
 }

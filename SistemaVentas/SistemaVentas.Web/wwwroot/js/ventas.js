@@ -48,9 +48,8 @@ function buscarProducto() {
     $('#txtProducto').val('Buscando...');
 
     $.ajax({
-        url: '/Productos/BuscarPorCodigo',
+        url: `${API_BASE}Productos/buscar/${encodeURIComponent(codigo)}`,
         type: 'GET',
-        data: { codigo: codigo },
         success: function (response) {
             if (response.success) {
                 const producto = response.data;
@@ -71,6 +70,7 @@ function buscarProducto() {
             mostrarNotificacion('Error al buscar el producto', 'error');
         }
     });
+
 }
 
 // Agregar producto al detalle
