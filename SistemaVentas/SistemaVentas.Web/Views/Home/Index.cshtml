@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h2 class="page-title">
+            <i class="fas fa-home text-danger"></i> Panel de Administración
+        </h2>
+        <hr />
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4 mb-4">
+        <div class="card dashboard-card border-danger">
+            <div class="card-body text-center">
+                <i class="fas fa-box fa-3x text-danger mb-3"></i>
+                <h5 class="card-title">Productos</h5>
+                <p class="card-text">Gestionar inventario de productos</p>
+                <a asp-controller="Productos" asp-action="Index" class="btn btn-danger">
+                    <i class="fas fa-arrow-right"></i> Ir a Productos
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card dashboard-card border-danger">
+            <div class="card-body text-center">
+                <i class="fas fa-shopping-cart fa-3x text-danger mb-3"></i>
+                <h5 class="card-title">Ventas</h5>
+                <p class="card-text">Registrar y consultar ventas</p>
+                <a asp-controller="Ventas" asp-action="Index" class="btn btn-danger">
+                    <i class="fas fa-arrow-right"></i> Ir a Ventas
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card dashboard-card border-danger">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-bar fa-3x text-danger mb-3"></i>
+                <h5 class="card-title">Reportes</h5>
+                <p class="card-text">Generar reportes de ventas</p>
+                <a asp-controller="Ventas" asp-action="Reportes" class="btn btn-danger">
+                    <i class="fas fa-arrow-right"></i> Ir a Reportes
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

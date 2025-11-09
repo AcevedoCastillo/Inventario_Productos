@@ -1,0 +1,67 @@
+﻿@model List<SistemaVentas.Web.Models.ViewModels.VentaViewModel>
+@{
+    ViewData["Title"] = "Ventas";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h2 class="page-title">
+            <i class="fas fa-shopping-cart text-danger"></i> Registro de Ventas
+        </h2>
+        <hr />
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12">
+        <a asp-action="Create" class="btn btn-danger">
+            <i class="fas fa-plus"></i> Nueva Venta
+        </a>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="tablaVentas">
+                        <thead class="table-danger">
+                            <tr>
+                                <th>N° Venta</th>
+                                <th>Fecha</th>
+                                <th>Vendedor</th>
+                                <th class="text-end">Subtotal</th>
+                                <th class="text-end">IVA</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                @foreach (var venta in Model)
+                                {
+                                    <tr>
+                                        <td><strong>@venta.IdVenta</strong></td>
+                                        <td>@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td>@venta.NombreUsuario</td>
+                                        <td class="text-end">@venta.SubTotal.ToString("C2")</td>
+                                        <td class="text-end">@venta.TotalIVA.ToString("C2")</td>
+                                        <td class="text-end"><strong>@venta.Total.ToString("C2")</strong></td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center">No hay ventas registradas</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

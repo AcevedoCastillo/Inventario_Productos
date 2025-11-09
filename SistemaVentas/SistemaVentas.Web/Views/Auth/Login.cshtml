@@ -1,0 +1,45 @@
+﻿@model SistemaVentas.Web.Models.ViewModels.LoginViewModel
+@{
+    Layout = "_LoginLayout";
+}
+
+<div class="login-container">
+    <div class="login-box">
+        <div class="login-header">
+            <h2>Sistema de Ventas</h2>
+            <p class="text-muted">Ingrese sus credenciales</p>
+        </div>
+
+        <form asp-action="Login" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="NombreUsuario" class="form-label">
+                    <i class="fas fa-user"></i> Usuario
+                </label>
+                <input asp-for="NombreUsuario" class="form-control" placeholder="Ingrese su usuario" autofocus />
+                <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Contrasena" class="form-label">
+                    <i class="fas fa-lock"></i> Contraseña
+                </label>
+                <input asp-for="Contrasena" class="form-control" placeholder="Ingrese su contraseña" />
+                <span asp-validation-for="Contrasena" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-danger w-100">
+                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+            </button>
+        </form>
+
+        <div class="login-footer mt-4">
+            <small class="text-muted">Sistema de Inventario y Ventas © 2025</small>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

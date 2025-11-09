@@ -1,0 +1,53 @@
+﻿@model SistemaVentas.Web.Models.ViewModels.ProductoViewModel
+@{
+    ViewData["Title"] = "Eliminar Producto";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h2 class="page-title">
+            <i class="fas fa-trash text-danger"></i> Eliminar Producto
+        </h2>
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Confirmar Eliminación</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <strong>¿Está seguro de que desea eliminar este producto?</strong>
+                    <p class="mb-0">Esta acción no se puede deshacer.</p>
+                </div>
+
+                <dl class="row">
+                    <dt class="col-sm-3">Código:</dt>
+                    <dd class="col-sm-9">@Model.Codigo</dd>
+
+                    <dt class="col-sm-3">Producto:</dt>
+                    <dd class="col-sm-9">@Model.Producto</dd>
+
+                    <dt class="col-sm-3">Precio:</dt>
+                    <dd class="col-sm-9">@Model.Precio.ToString("C2")</dd>
+
+                    <dt class="col-sm-3">Stock:</dt>
+                    <dd class="col-sm-9">@Model.Stock</dd>
+                </dl>
+
+                <form asp-action="DeleteConfirmed" method="post">
+                    <input type="hidden" asp-for="@Model.IdPro" />
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está completamente seguro?');">
+                        <i class="fas fa-trash"></i> Sí, Eliminar
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancelar
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

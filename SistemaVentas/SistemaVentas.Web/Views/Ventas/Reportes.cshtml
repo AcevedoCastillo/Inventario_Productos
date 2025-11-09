@@ -1,0 +1,92 @@
+﻿@{
+    ViewData["Title"] = "Reportes";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h2 class="page-title">
+            <i class="fas fa-chart-bar text-danger"></i> Reportes de Ventas
+        </h2>
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0"><i class="fas fa-calendar-alt"></i> Generar Reporte por Período</h5>
+            </div>
+            <div class="card-body">
+                <form id="formReporte">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Fecha Inicio:</label>
+                            <input type="date" id="reporteFechaInicio" class="form-control" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Fecha Fin:</label>
+                            <input type="date" id="reporteFechaFin" class="form-control" required />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <button type="button" id="btnGenerarReporte" class="btn btn-danger btn-lg me-2">
+                                <i class="fas fa-search"></i> Ver Reporte
+                            </button>
+                            <button type="button" id="btnDescargarPDF" class="btn btn-outline-danger btn-lg me-2">
+                                <i class="fas fa-file-pdf"></i> Descargar PDF
+                            </button>
+                            <button type="button" id="btnDescargarExcel" class="btn btn-outline-success btn-lg">
+                                <i class="fas fa-file-excel"></i> Descargar Excel
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabla de Resultados -->
+<div class="row mt-4" id="resultadosReporte" style="display: none;">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Resultados del Reporte</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="tablaReporte">
+                        <thead class="table-danger">
+                            <tr>
+                                <th>N° Venta</th>
+                                <th>Fecha</th>
+                                <th>Vendedor</th>
+                                <th class="text-end">Subtotal</th>
+                                <th class="text-end">IVA</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reporteBody">
+                            <!-- Se llenará con JavaScript -->
+                        </tbody>
+                        <tfoot class="table-light fw-bold">
+                            <tr>
+                                <td colspan="3" class="text-end">TOTALES:</td>
+                                <td class="text-end" id="totalSubtotal">$0.00</td>
+                                <td class="text-end" id="totalIVA">$0.00</td>
+                                <td class="text-end text-danger" id="totalGeneral">$0.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/reportes.js"></script>
+}

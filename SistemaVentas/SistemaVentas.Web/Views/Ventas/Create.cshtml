@@ -1,0 +1,162 @@
+﻿@model SistemaVentas.Web.Models.ViewModels.CrearVentaViewModel
+@inject IConfiguration Configuration
+@{
+    ViewData["Title"] = "Registrar Venta";
+    var usuario = JsonConvert.DeserializeObject<SistemaVentas.Web.Models.ViewModels.UsuarioSesion>(
+        Context.Session.GetString("Usuario"));
+    Layout = usuario.Rol == "Administrador" ? "_Layout" : "_LayoutOperador";
+}
+@using Newtonsoft.Json
+
+<div class="row">
+    <div class="col-12">
+        <h2 class="page-title">
+            <i class="fas fa-cash-register text-danger"></i> Registro de Ventas
+        </h2>
+        <hr />
+    </div>
+</div>
+
+<!-- Encabezado Rojo -->
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="card border-0">
+            <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="me-2">@usuario.NombreUsuario</span>
+                    <span class="badge bg-light text-danger">@usuario.IdUsuario</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sección de Búsqueda de Productos -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-body bg-light">
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Código:</label>
+                        <input type="text" id="txtCodigo" class="form-control" placeholder="Código del producto" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Producto:</label>
+                        <input type="text" id="txtProducto" class="form-control" placeholder="Nombre del producto" readonly />
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold">Precio:</label>
+                        <input type="number" id="txtPrecio" class="form-control" placeholder="0.00" step="0.01" readonly />
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold">Cantidad:</label>
+                        <input type="number" id="txtCantidad" class="form-control" placeholder="0" min="1" value="1" />
+                    </div>
+
+                    <div class="col-md-1 d-flex align-items-end">
+                        <button type="button" id="btnAgregar" class="btn btn-danger w-100">
+                            <i class="fas fa-plus"></i> Agregar producto
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabla de Detalle de Ventas -->
+<div class="row mt-4">
+    <div class="col-12">
+        <h5 class="mb-3">Detalle de ventas (Vendedor: <span class="text-danger">@Model.Vendedor</span>)</h5>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" id="tablaDetalleVenta">
+                <thead class="table-light">
+                    <tr>
+                        <th class="text-center">N°</th>
+                        <th>Código</th>
+                        <th>Fecha</th>
+                        <th>Producto</th>
+                        <th class="text-end">Precio</th>
+                        <th class="text-center">Cantidad</th>
+                        <th class="text-end">Total</th>
+                        <th class="text-center">Quitar</th>
+                    </tr>
+                </thead>
+                <tbody id="detalleVentaBody">
+                    <!-- Se llenará dinámicamente con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Totales -->
+<div class="row mt-3">
+    <div class="col-md-8"></div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <strong>Sub total:</strong>
+                    <span id="lblSubTotal">$0.00</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <strong>Total con IVA:</strong>
+                    <span id="lblIVA">$0.00</span>
+                </div>
+                <hr />
+                <div class="d-flex justify-content-between">
+                    <strong class="fs-5">Total a pagar:</strong>
+                    <strong class="fs-5 text-danger" id="lblTotal">$0.00</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Botón Registrar Venta -->
+<div class="row mt-4 mb-4">
+    <div class="col-12 text-center">
+        <button type="button" id="btnRegistrarVenta" class="btn btn-danger btn-lg" disabled>
+            <i class="fas fa-save"></i> Registrar venta
+        </button>
+    </div>
+</div>
+
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="modalExito" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-check-circle"></i> Venta Registrada
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" onclick="location.reload()"></button>
+            </div>
+            <div class="modal-body text-center">
+                <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
+                <h4>¡Venta registrada exitosamente!</h4>
+                <p class="mb-0">Venta N° <strong id="numeroVenta"></strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="location.reload()">
+                    <i class="fas fa-plus"></i> Nueva Venta
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const API_BASE = '@Configuration["ApiSettings:BaseUrl"]';
+    </script>
+    <script src="~/js/ventas.js"></script>
+
+
+}
