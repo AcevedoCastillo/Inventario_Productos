@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using SistemaVentas.Web.Models.ViewModels;
 using SistemaVentas.Web.Services.Interfaces;
@@ -127,7 +128,8 @@ namespace SistemaVentas.Web.Controllers
         {
             try
             {
-                var pdfBytes = await _ventaService.DescargarReportePDFAsync(fechaInicio, fechaFin);
+                DateTime dateplus = fechaFin.AddDays(1);
+                var pdfBytes = await _ventaService.DescargarReportePDFAsync(fechaInicio, dateplus);
                 return File(pdfBytes, "application/pdf", $"Reporte_Ventas_{fechaInicio:yyyyMMdd}_{fechaFin:yyyyMMdd}.pdf");
             }
             catch (Exception ex)
@@ -142,7 +144,8 @@ namespace SistemaVentas.Web.Controllers
         {
             try
             {
-                var excelBytes = await _ventaService.DescargarReporteExcelAsync(fechaInicio, fechaFin);
+                DateTime dateplus = fechaFin.AddDays(1);
+                var excelBytes = await _ventaService.DescargarReporteExcelAsync(fechaInicio, dateplus);
                 return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     $"Reporte_Ventas_{fechaInicio:yyyyMMdd}_{fechaFin:yyyyMMdd}.xlsx");
             }

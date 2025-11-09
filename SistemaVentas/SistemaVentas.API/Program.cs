@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using SistemaVentas.API.Data;
 using SistemaVentas.API.Data.Repositories;
 using SistemaVentas.API.Services;
@@ -7,7 +8,8 @@ using SistemaVentas.Core.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+// Configurar licencia de EPPlus (Non-Commercial)
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -20,6 +22,7 @@ builder.Services.AddScoped<IVentaRepository, VentaRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IVentaService, VentaService>();
+builder.Services.AddScoped<IReporteService, ReporteService>();
 // Agregar Controllers
 builder.Services.AddControllers();
 

@@ -8,12 +8,14 @@ namespace SistemaVentas.API.Services
     {
         private readonly IVentaRepository _ventaRepository;
         private readonly IProductoRepository _productoRepository;
+        private readonly IReporteService _reporteService;
         private const decimal PORCENTAJE_IVA = 0.13m; // 13% IVA
 
-        public VentaService(IVentaRepository ventaRepository, IProductoRepository productoRepository)
+        public VentaService(IVentaRepository ventaRepository, IProductoRepository productoRepository, IReporteService reporteService)
         {
             _ventaRepository = ventaRepository;
             _productoRepository = productoRepository;
+            _reporteService = reporteService;
         }
 
         public async Task<int> CrearVentaAsync(CrearVentaDTO crearVentaDto)
@@ -145,14 +147,40 @@ namespace SistemaVentas.API.Services
 
         public async Task<byte[]> GenerarReportePDFAsync(DateTime fechaInicio, DateTime fechaFin)
         {
-            // Implementaremos después
-            throw new NotImplementedException("Generación de PDF pendiente");
+            try
+            {
+                var ventas = await _ventaRepository.ObtenerReporteDetalladoAsync(fechaInicio, fechaFin);
+
+                if (ventas == null || !ventas.Any())
+                {
+                    throw new Exception("No hay datos para generar el reporte");
+                }
+
+                return await _reporteService.GenerarReportePDFAsync(ventas.ToList(), fechaInicio, fechaFin);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al generar reporte PDF: {ex.Message}", ex);
+            }
         }
 
         public async Task<byte[]> GenerarReporteExcelAsync(DateTime fechaInicio, DateTime fechaFin)
         {
-            // Implementaremos después
-            throw new NotImplementedException("Generación de Excel pendiente");
+            try
+            {
+                var ventas = await _ventaRepository.ObtenerReporteDetalladoAsync(fechaInicio, fechaFin);
+
+                if (ventas == null || !ventas.Any())
+                {
+                    throw new Exception("No hay datos para generar el reporte");
+                }
+
+                return await _reporteService.GenerarReporteExcelAsync(ventas.ToList(), fechaInicio, fechaFin);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al generar reporte Excel: {ex.Message}", ex);
+            }
         }
 
         // Método auxiliar para mapear

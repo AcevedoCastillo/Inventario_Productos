@@ -109,7 +109,7 @@ function renderizarReporte(ventas) {
             <tr>
                 <td>${venta.idVenta}</td>
                 <td>${new Date(venta.fecha).toLocaleDateString('es-SV')}</td>
-                <td>${venta.vendedor}</td>
+                <td>${venta.nombreUsuario}</td>
                 <td class="text-end">$${venta.subTotal.toFixed(2)}</td>
                 <td class="text-end">$${venta.totalIVA.toFixed(2)}</td>
                 <td class="text-end fw-bold">$${venta.total.toFixed(2)}</td>

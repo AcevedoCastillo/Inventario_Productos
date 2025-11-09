@@ -9,13 +9,24 @@ namespace SistemaVentas.Web.Services.Implementation
         private readonly IApiService _apiService;
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
+        private readonly string _baseUrl;
 
         public VentaApiService(IApiService apiService, HttpClient httpClient, IConfiguration configuration)
         {
             _apiService = apiService;
             _httpClient = httpClient;
             _configuration = configuration;
-            _httpClient.BaseAddress = new Uri(_configuration["ApiSettings:BaseUrl"]);
+            _baseUrl = _configuration["ApiSettings:BaseUrl"];
+            if (!_baseUrl.EndsWith("/"))
+            {
+                _baseUrl += "/";
+            }
+
+            _httpClient.BaseAddress = new Uri(_baseUrl);
+
+            _httpClient.DefaultRequestHeaders.Accept.Clear();
+            _httpClient.DefaultRequestHeaders.Accept.Add(
+                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         public async Task<int> CrearVentaAsync(CrearVentaViewModel venta)
@@ -63,6 +74,7 @@ namespace SistemaVentas.Web.Services.Implementation
         public async Task<byte[]> DescargarReportePDFAsync(DateTime fechaInicio, DateTime fechaFin)
         {
             var endpoint = $"/ventas/reporte-pdf?fechaInicio={fechaInicio:yyyy-MM-dd}&fechaFin={fechaFin:yyyy-MM-dd}";
+            endpoint = endpoint.TrimStart('/');
             var response = await _httpClient.GetAsync(endpoint);
             return await response.Content.ReadAsByteArrayAsync();
         }
@@ -70,6 +82,7 @@ namespace SistemaVentas.Web.Services.Implementation
         public async Task<byte[]> DescargarReporteExcelAsync(DateTime fechaInicio, DateTime fechaFin)
         {
             var endpoint = $"/ventas/reporte-excel?fechaInicio={fechaInicio:yyyy-MM-dd}&fechaFin={fechaFin:yyyy-MM-dd}";
+            endpoint = endpoint.TrimStart('/');
             var response = await _httpClient.GetAsync(endpoint);
             return await response.Content.ReadAsByteArrayAsync();
         }
