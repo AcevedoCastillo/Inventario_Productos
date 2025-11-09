@@ -114,7 +114,7 @@ namespace SistemaVentas.Web.Controllers
         {
             try
             {
-                var ventas = await _ventaService.ObtenerVentasAsync(fechaInicio, fechaFin);
+                var ventas = await _ventaService.ObtenerVentasAsync(fechaInicio, fechaFin.AddDays(1));
                 return Json(new { success = true, data = ventas });
             }
             catch (Exception ex)
